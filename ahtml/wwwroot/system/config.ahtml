@@ -1,0 +1,69 @@
+<?
+namespace config;
+
+/*
+所使用的数据库
+如：mssql,mysql
+*/
+driver = "mysql";
+
+/*
+主机名或主机 IP
+本机可使用 "localhost" 或 "127.0.0.1"
+*/
+host = "localhost";
+
+/*
+实例名，只对mssql数据库有效
+*/
+msname = "";
+
+/*
+登录数据库所使用的用户名
+*/
+username = "root";
+
+/*
+登录数据库所使用的密码
+*/
+password = "123456";
+
+/*
+数据库名称，连接数据库成功后将自动选择该库
+*/
+dbname = "ErpAAuto";
+
+/*
+数据库端口
+*/
+port = 3306;
+
+/*
+RSA私钥, 用于解密post传输的加密数据包, 如果不需要解密请留空!
+
+通过以下代码获取
+import crypt.rsa;
+import crypt.bin;
+var rsa = crypt.rsa();
+rsa.genKey();
+var publicKey = crypt.bin.encodeBase64(rsa.exportPublicKey());//RSA公钥
+var privateKey = crypt.bin.encodeBase64(rsa.exportPrivateKey()); //RSA私钥
+rsa.release();
+string.save("/publicKey.txt", publicKey);
+string.save("/privateKey.txt", privateKey);
+*/
+rsaPrivateKey = "BwIAAACkAABSU0EyAAQAAAEAAQD1ER+wwwBXZeKIZcdil6mlAWk1ljlqpuBc75sS
+z+SoIY9tuyJX9+6jvnT5/M3YhgTC3mFzEwdko/pIfLrVSlmto4A8hPNsmbwBAr3H
++0qcitPc6R53NmVnsPb+XzkMGDB4E2j8+W6n1xNSwWBXmqsU1RtG/6NeTU/adPIQ
+IS4jnAPJAF+rPVyqIn0uPpWZCehxnZWxLiOT2I8B2JD//gE0viXjhlf6haaX4Jfl
+yNfhKAT05CJavgrk2jE1yCxDydKn+4JKxkV61IdP7TxVsVAaqxXApH9MCs4oUUsK
+NQ3jpd8HdHbk7aMkI95838ZwFTpfrU0wIU3qblSwP/JzCKG90T8JRtqpOc+wamIt
+oQp2dMETUhhrJAcF7X+tDJPOsGjrEW2BIuQ1xKMc8mvHNg526e8RAJByhwyp+51W
+rNoxc0X4MliTrqHoKPEuUiyGXW4yCzErUi2SIO78iCWe91q+IjXhTaN/2aqk72RD
+3tQ45SsCkuc5/FGl/ZhxBbb7innQZB0t/vBsPmfUxNySJK1zEw1wBSt0MHBzTv2p
+dnt9YhdGLvhFWDxeU+5QunyL/UAEM7K07hU5m4ztBzQbNeVuHTWXQpad5maKpIA8
+p1VcrqB5txrAOxDkwpXP88P3RvQI9q+9f2SMbtyiQozBchc2vUMMh8SWFmVBqBWK
+EO/TiRbIhSa5jrr1bLyE4gaGyhdO2sF9zQIBGIdgMsVIXwTzV3YbqPARRTcrQfJZ
+N7Fkjl/72IC4CZObDE+ou5pxn20=";
+
+//rsaPrivateKey = "";

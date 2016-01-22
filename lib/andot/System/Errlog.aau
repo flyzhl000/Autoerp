@@ -1,0 +1,34 @@
+
+namespace andot.System.Errlog
+
+import andot.sql;
+import andot.System;
+import carl.update;
+import console;
+
+var tablename = "errlog";
+
+var Ver = carl.update.getVersion();//°æ±¾ºÅ
+
+/*intellisense(ws.System.Errlog)*/
+
+insert = function(tab){
+	var sql = andot.sql.getInsertSql(tablename, tab);
+	var ok,err = andot.System.exec(sql)
+	return ok,err; 
+}
+
+onError = function(err){
+	if( _STUDIO_INVOKED ){
+		console.log("global",err)
+		return ; 
+	}
+	var t = {}
+	t["ver"] = Ver;
+	t["err"] = err;
+	t["username"] = ..tabLoginInfo[["NickName"]] : ..thread.get("tabLoginInfo")[["NickName"]];
+	t["dtime"] = andot.getServerTime();
+	insert(t);
+}
+
+/*end intellisense*/

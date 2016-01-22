@@ -1,0 +1,215 @@
+import win.ui;
+import hprose;
+import thread.manage;
+import andot.System;
+/*DSG{{*/
+var winform = ..win.form(text="aardio form";right=599;bottom=399)
+winform.add(
+button={cls="button";text="button";left=83;top=119;right=221;bottom=150;z=1};
+button2={cls="button";text="button2";left=138;top=186;right=328;bottom=222;z=2};
+button3={cls="button";text="button3";left=235;top=112;right=468;bottom=147;z=4};
+button4={cls="button";text="button4";left=235;top=151;right=463;bottom=183;z=5};
+button5={cls="button";text="button5";left=347;top=191;right=483;bottom=228;z=6};
+button6={cls="button";text="button6";left=52;top=77;right=181;bottom=118;z=7};
+button7={cls="button";text="button7";left=241;top=63;right=385;bottom=100;z=8};
+edit={cls="edit";text="edit";left=16;top=245;right=578;bottom=338;edge=1;multiline=1;z=3}
+)
+/*}}*/
+
+winform.button7.oncommand = function(id,event){
+	var fields = {};
+	var tab = {};
+	var tab2 = {};		
+	for(i=1;10;1){
+		fields[i] = i;
+	}	
+	for(i=1;10;1){
+		tab[i] = i*i
+	}
+	for(i=1;10;1){
+		tab2[i] = i
+	}		
+	var t = { fields = fields  };
+	..table.push(t, tab);
+	..table.push(t, tab2);	
+	io.open();
+	var_dump(t);	
+}
+
+
+winform.button6.oncommand = function(id,event){
+	var fields = {};
+	for(i=1;10;1){
+		fields[i] = i
+	}
+	t = { fields = fields  };
+	var bool,tab = andot.ahtmlServer("/wuliu/http_server.php","getTable", "select * from systemuser" );
+	if( ok ){
+		var t1,t2 = ..table.unpackArgs(tab);
+		..table.push(t, tab);
+
+		//return tab,err;
+	}	
+	io.open();
+	var_dump(t);
+	var_dump(tab);				
+}
+
+
+winform.button5.oncommand = function(id,event){
+	//winform.msgbox( winform.button5.text );
+	//andot.System.getTable("select * from systemuser");
+	var bool,t = andot.ahtmlServer("/wuliu/http_server.php","getTable", "select * from systemuser" );
+	if( ok ){
+		var tab,err,fields = ..table.unpackArgs(t);
+		if(tab) tab["fields"] = fields;
+		//return tab,err;
+	}
+	io.open();
+	io.print(bool);
+	var_dump(t);
+	var_dump(tab);
+	var_dump(fields);	
+}
+
+
+connect = function(){
+	var conn,err;
+	var driver="mysql";
+	import carl.mysql;
+	try{
+		conn,err = carl.mysql("127.0.0.1:3306","wuliu","root","root");
+	}
+	catch(e){
+		err = e;
+	}
+	return conn,err;
+}
+
+exec = function( ... ){
+	var conn,err = connect();
+	if(!conn) return null,err;
+	var ok,err = conn.exec( ... );
+	conn.close();
+	conn = null;
+	return ok,err; 
+}
+
+getTable = function( ... ){
+	var conn,err = connect();
+	if(!conn) return null,err;
+	var t,err = conn.getTable( ... );
+	conn.close();
+	conn = null;
+	var fields;
+	if(t){
+		fields = t["fields"];
+		t["fields"] = null;
+	}
+	return t,err,fields;
+}
+
+transaction = function( ... ){//事务执行，参数table对像
+	var conn,err = connect();
+	if(!conn) return null,err;
+	var ok,err = conn.transaction( ... );
+	conn.close();
+	conn = null;
+	return ok,err;
+}
+storedProcedures = function(name, ...){
+		var t = {...};
+		var tab = {};
+		for(k,v in t){
+			if(type.string == type(v)){
+				table.push(tab,"'" ++ v ++ "'");
+			}
+			else{
+				table.push(tab, v);
+			}			
+		}
+		var sql = "CALL " ++ name ++ "(" ++ string.join(tab, ",") ++ ")";
+		return (sql); 
+	}
+	
+/*
+storedProcedures = function( ... ){//存储过程
+	var conn,err = connect();
+	if(!conn) return null,err;
+	var t,err = conn.storedProcedures( ... );
+	conn.close();
+	conn = null;
+	return t,err;
+}
+
+*/
+winform.button4.oncommand = function(id,event){
+import andot.System;
+	var t,err=andot.System.sp_getPrimaryKey("systemuser"); 
+winform.edit.text=t;
+/*
+io.open();
+var_dump(con);	
+*/	
+}
+
+
+import util
+var_dump = function(...){
+    var args = {...};
+    for(k,v in args){
+        var t = type(v);
+        if( t == type.table )
+            args[k] =  t + ":(#" + #v + ") " + table.tostring(v)
+        elseif( t == type.pointer || t == type.cdata){
+            args[k] =  tostring(v) 
+        }
+        else{
+            args[k] = t + ": "  + tostring(v) 
+        }
+    }
+    util.apply( io.print, ,args )
+} 
+
+
+winform.button.oncommand = function(id,event){
+	var bool,t;
+	manage = thread.manage(1);
+	manage.create(func,"http://127.0.0.1/wuliu/http_server.php/", "getTable","select * from systemuser").onEnd = function(...){
+		bool,t = ...;
+	}
+	manage.waitClose();
+	//winform.msgbox( bool );
+	io.open();
+	var t1,t2 = ..table.unpack(t);
+	var_dump(t1);
+	var_dump(t2);	
+	//winform.msgbox( t );
+	//winform.msgbox(  ..table.unpack(t) );
+	return bool,t; 	
+	
+}
+winform.button3.oncommand = function(id,event){
+	import andot;
+	var bool,result = andot.ahtmlServer("/wuliu/http_server.php","hello","341");
+	//winform.msgbox( winform.button3.text );
+	//var bool,result = func("http://127.0.0.1/wuliu/http_server.php",  "hello","341");
+	io.open();
+	var_dump(result);
+	winform.edit.text =  result;
+}
+
+
+winform.button2.oncommand = function(id,event){
+    var client = hprose.client.create("http://127.0.0.1/wuliu/http_server.php");
+    client.hello("world", function(result) {
+        winform.edit.text = 'result: \r\n' ++ result;
+    }, function(name, err) {
+        winform.edit.text = 'error: \r\n' ++ err;
+    });
+}
+
+
+
+winform.show() 
+win.loopMessage();

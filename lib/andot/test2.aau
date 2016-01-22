@@ -1,0 +1,246 @@
+import win.ui;
+import win.ui.ctrl; 
+import andot.System;
+import andot.System.SystemUser;
+/*DSG{{*/
+var winform = ..win.form(text="aardio form";right=599;bottom=399)
+winform.add(
+btn1={cls="button";text="exec";left=21;top=123;right=128;bottom=158;z=1};
+btn2={cls="button";text="getTable";left=21;top=172;right=128;bottom=207;z=9};
+button={cls="button";text="primary_key";left=21;top=221;right=128;bottom=256;z=10};
+button2={cls="button";text="button2";left=376;top=127;right=505;bottom=172;z=3};
+button3={cls="button";text="button3";left=376;top=220;right=505;bottom=265;z=4};
+button4={cls="button";text="button4";left=376;top=266;right=505;bottom=311;z=5};
+button5={cls="button";text="button5";left=376;top=34;right=505;bottom=79;z=6};
+button6={cls="button";text="button6";left=376;top=81;right=505;bottom=126;z=7};
+button7={cls="button";text="button7";left=376;top=173;right=505;bottom=218;z=8};
+edit={cls="edit";text="edit";left=111;top=67;right=252;bottom=99;edge=1;z=2}
+)
+/*}}*/
+
+winform.button.oncommand = function(id,event){
+	var id= andot.System.SystemUser.getPrimaryKey();
+	io.open();
+	io.print(id);
+}
+
+
+	onCreate = function(){//创建窗口后触发此函数 
+		import win.cur;
+		hwndmouse = win.cur.load(32649/*_IDC_HAND*/)//鼠标形状变成手状句柄
+		for(name,ctrl in winform.eachControl() ){
+			if( ..string.startWith(name,"btn") ){
+				ctrl.wndproc = function(hwnd,message,wParam,lParam){
+					if(message = 0x200/*_WM_MOUSEMOVE*/ or message = 0x202/*_WM_LBUTTONUP*/)
+					win.cur.setCur(hwndmouse);//鼠标形状变成手状
+				}
+				ctrl.oncommand = function(id,event){
+					if( event ) return ; 
+					ctrl.disabled = true;
+					win.delay(1000);
+					//this.btnCommand( name )
+					ctrl.disabled = false;
+				}
+			}
+		}
+	}
+winform.button7.oncommand = function(id,event){
+import carl.sql;
+winform.edit.text =..carl.sql.my.getPageSql("SELECT * FROM systemuser",1, 29,"ID");
+}
+
+
+winform.button6.oncommand = function(id,event){
+var tab={      LoginName = "John";
+               NickName = 'Doe'};
+var result = andot.System.ahtmlServer("getInsertSql","systemuser",tab);
+io.open();
+io.print(result);
+}
+
+
+winform.button5.oncommand = function(id,event){
+	//winform.msgbox( winform.button5.text );
+	var tab={{1;2;3;4;5};{2;2;3;4;5}};
+	io.open();
+	var tab1,tab2 =..table.unpackArgs(tab);
+	//io.print( ..table.unpackArgs(tab[1]));
+	var_dump(tab1);
+	var_dump(tab2);
+}
+
+
+	
+import util
+var_dump = function(...){
+    var args = {...};
+    for(k,v in args){
+        var t = type(v);
+        if( t == type.table )
+            args[k] =  t + ":(#" + #v + ") " +table.tostring(v)
+        elseif( t == type.pointer || t == type.cdata){
+            args[k] =  tostring(v) 
+        }
+        else{
+            args[k] = t + ": "  + tostring(v) 
+        }
+    }
+    util.apply( io.print, ,args )
+} 
+var_dump2 = function(...){
+    var args = {...};
+	var t = type(args);
+	if(t == type.table){
+    	for(k1,v1 in t){
+        	t = type(v1);
+        	if( t == type.table ){
+        		for(k2,v2 in v1){
+        			args[k1][k2]=string.fromto(v2);
+        		}
+        	
+        	}else{
+        		args[k1]=string.fromto(v1);
+        	}
+    	}	
+	}
+	
+    util.apply( io.print, args )
+}
+
+winform.button4.oncommand = function(id,event){
+	//winform.msgbox( winform.button4.text );
+	var bool,tab =ahtmlServer("http://127.0.0.1/wuliu/http_server.php","doSql","select * from systemuser")	
+	//winform.msgbox(tab )
+	var tab3=..table.unpackArgs(tab);
+io.open()
+/*
+    for(k,v in tab){
+		io.print( k ,": ",type(v) ,table.tostring(v)); 
+	}   
+*/
+//io.print(tostring(tab[1][2]["PassWord"]));
+var tab2=tab3;
+io.print(tostring(tab2[2]["PassWord"]));
+var_dump(tab3);
+/*
+    for(k,v in tab){
+        var t = type(v);
+        if( t == type.table )
+            args[k] =  t + ":(#" + #v + ") " + table.tostring(v)
+        elseif( t == type.pointer || t == type.cdata){
+            args[k] =  tostring(v) 
+        }
+        else{
+            args[k] = t + ": "  + tostring(v) 
+        }
+    }
+*/
+	//winform.msgbox(  bool );
+}
+
+func = function(serverUrl, rsaPublicKey, funcName, ...){
+		import hprose;
+		var client = hprose.client.create(serverUrl);
+		client[funcName]((...),function(result){
+			return true,result; 
+		},function(name,err){
+			return null,err;
+		});
+		//var t= { client[funcName](...) };
+		//return true,t;
+	}
+
+winform.button3.oncommand = function(id,event){
+/*
+	var bool,t =ahtmlServer("http://127.0.0.1/wuliu/http_server.php","hello","341")	
+	andot.System.getServerTime();
+	winform.msgbox(  ..table.unpack(t) );
+	winform.msgbox(  bool );
+*/
+
+
+	var bool,t;
+	manage = thread.manage(1);
+	manage.create(func,"http://127.0.0.1/wuliu/http_server.php", rsaPublicKey, "hello","341").onEnd = function(...){
+		bool,t = ...;
+	}
+	manage.waitClose();
+	//winform.msgbox( t );
+	winform.msgbox(  ..table.unpack(t) );
+	return bool,t; 	
+
+}
+
+
+winform.button2.oncommand = function(id,event){
+	//winform.msgbox( winform.button2.text );
+	import andot.System;
+	loginName= andot.System.getServerTime();
+	win.msgbox(loginName);
+	
+}
+
+winform.btn1.oncommand = function(id,event){
+	var t,err= andot.System.exec("INSERT INTO  systemuser (
+`SystemUserId` ,
+`LoginName` ,
+`NickName` ,
+`PassWord` ,
+`CreateTime` ,
+`IsEnable` ,
+`IsAdmin` ,
+`truser` ,
+`trdate`
+)
+VALUES (
+'195',  'er236y',  'hlh',  'AFGe', NULL , NULL , NULL , NULL , NULL
+)");
+	//var tab,err = andot.System.getTable("select * from systemuser ");
+	io.open();
+	if(!t){
+		io.print("出错:"++ err);
+		var_dump(err);
+	}else{
+		io.print("成功");
+	}
+}
+
+winform.btn2.oncommand = function(id,event){
+	var tab,err= andot.System.getTable("SELECT * FROM  `systemuser` ");
+
+io.open();
+
+import string;
+	var t = type(tab);
+	if(t == type.table){
+    	for(k1,v1 in tab){
+    		
+    		//io.print(k1);
+    		//io.print(tostring(v1));
+        	t = type(v1);
+        	if( t == type.table ){
+        		for(k2,v2 in v1){
+        			tab[k1][k2]=string.fromto(v2);
+        			//io.print(string.fromto(v2))
+        		}
+        	
+        	}else{
+        		tab[k1]=string.fromto(v1);
+        		//io.print(table.tostring(v1))
+        	}
+    	}	
+	}
+
+
+
+
+	//io.open();	
+	var_dump(tab);
+	//io.print(tab);
+	//io.print(err);
+	//win.msgbox(tab);
+	//win.msgbox(err);
+}
+//onCreate();
+winform.show() 
+win.loopMessage();

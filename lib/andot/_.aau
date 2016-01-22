@@ -1,0 +1,51 @@
+//数据库访问层
+namespace andot;
+import andot.System;
+import thread.manage;
+
+//RSA公钥，留空不加密
+var rsaPublicKey = /*
+BgIAAACkAABSU0ExAAQAAAEAAQD1ER+wwwBXZeKIZcdil6mlAWk1ljlqpuBc75sS
+z+SoIY9tuyJX9+6jvnT5/M3YhgTC3mFzEwdko/pIfLrVSlmto4A8hPNsmbwBAr3H
++0qcitPc6R53NmVnsPb+XzkMGDB4E2j8+W6n1xNSwWBXmqsU1RtG/6NeTU/adPIQ
+IS4jnA==*/
+
+/*intellisense(ws)*/
+
+getServerTime = function(){//返回服务器时间	
+	return andot.System.getServerTime(); 
+}
+getStoredProcedures = function(name, tablename){
+	var sql = "CALL " ++ name ++ "('" ++ tablename ++ "')";
+	return (sql); 
+}
+
+ahtmlServer = function(serverUrl,funcName, ...){
+	var func = function(serverUrl, rsaPublicKey, funcName, ...){
+		import hprose;
+		var client = hprose.client.create(serverUrl);		
+		var t= { client[funcName](...) };
+		return true,t;
+	}
+	
+/*
+	var path = "/config/loginForm.table";
+	var ahtmlServerUrl = ..thread.get("ahtmlServerUrl");
+	if(!#ahtmlServerUrl && ..io.exist(path)){
+		var t = eval(..string.load(path))
+		ahtmlServerUrl = t[["ahtmlServerUrl"]];
+	}
+	if(!#ahtmlServerUrl) return null,"未配置ahtmlServerUrl";
+
+*/
+	var ahtmlServerUrl ="http://127.0.0.1";
+	var bool,t;
+	manage = thread.manage(1);
+	manage.create(func, ahtmlServerUrl ++ serverUrl, rsaPublicKey, funcName, ...).onEnd = function(...){
+		bool,t = ...;
+	}
+	manage.waitClose()
+	return bool,t; 
+}
+
+/*end intellisense*/

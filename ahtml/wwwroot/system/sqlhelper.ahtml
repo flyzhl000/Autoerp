@@ -1,0 +1,69 @@
+<?
+
+//sql连接库
+namespace sqlhelper
+
+var driver = ..config.driver;
+if(driver == "mssql"){
+	import carl.mssql;
+}elseif(driver == "mysql"){
+	import carl.mysql;
+}
+
+connect = function(){
+	var conn,err;
+	try{
+		if(driver == "mssql"){
+			var name = "";
+			if(#..config.msname) name = "\" + ..config.msname;
+			conn,err = carl.mssql(..config.host ++ "," ++ ..config.port ++ name,..config.dbname,..config.username,..config.password);
+		}elseif(driver == "mysql"){
+			conn,err = carl.mysql(..config.host ++ ":" ++ ..config.port,..config.dbname,..config.username,..config.password);
+		}
+	}
+	catch(e){
+		err = e;
+	}
+	return conn,err;
+}
+
+exec = function( ... ){
+	var conn,err = connect();
+	if(!conn) return null,err;
+	var ok,err = conn.exec( ... );
+	conn.close();
+	conn = null;
+	return ok,err; 
+}
+
+getTable = function( ... ){
+	var conn,err = connect();
+	if(!conn) return null,err;
+	var t,err = conn.getTable( ... );
+	conn.close();
+	conn = null;
+	var fields;
+	if(t){
+		fields = t["fields"];
+		t["fields"] = null;
+	}
+	return t,err,fields;
+}
+
+transaction = function( ... ){//事务执行，参数table对像
+	var conn,err = connect();
+	if(!conn) return null,err;
+	var ok,err = conn.transaction( ... );
+	conn.close();
+	conn = null;
+	return ok,err;
+}
+
+storedProcedures = function( ... ){//存储过程
+	var conn,err = connect();
+	if(!conn) return null,err;
+	var t,err = conn.storedProcedures( ... );
+	conn.close();
+	conn = null;
+	return t,err;
+}

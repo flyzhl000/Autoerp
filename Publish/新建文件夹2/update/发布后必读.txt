@@ -1,0 +1,4 @@
+发布后
+1. 请手动把 Erp.exe 放于RAR压缩包内
+2. 记事本打开index.html, 填写更新日志,(可不写)
+3. 请把 Erp.exe,index.html,ERP-AAuto.rar 三个文件,上传到网站对应的update目录下,就可实现客户端自动升级功能

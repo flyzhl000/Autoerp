@@ -1,0 +1,25 @@
+ERP框架使用步骤
+
+1.先把用户库 \lib\carl\ 剪切到 ide标准库\lib\carl\目录下,否则运行不了.(此自定义库可做为标准库使用,)
+
+2.把\ahtml\目录下所有文件上传到服务端,IIS目录指向\ahtml\wwwroot,
+  并添加模块映射指向\ahtml\ahtmlcgi.exe
+
+3.架设数据库,先手动建好数据库,并导入数据库相应安装文件ErpAAuto-mssql.sql或ErpAAuto-mysql(utf8,InnoDB).sql
+
+4.默认超级管理员帐号: admin 密码: admin
+
+5.配置服务端数据库连接文件 \ahtml\wwwroot\system\config.ahtml
+
+6.打开客户端工程文件
+
+7.配置客户端数据库类型 \lib\config.aau  (config.__drive值)
+
+8.配置客户端线路 \lib\config.aau  (config.__appRoad值)
+
+9.发布EXE,打开\Publish\update\,按照 发布后必读.txt 操作,把相应的文件上传到服务端 \ahtml\wwwroot\update\ 目录下
+  就可以,客户端将会自动升级
+
+
+技术支持: carl论坛-AAuto快手编程语言第三方论坛
+http://bbs.carlaau.com/

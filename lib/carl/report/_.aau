@@ -1,0 +1,4 @@
+
+namespace carl.report{}
+
+import carl.report.template;

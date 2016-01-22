@@ -1,0 +1,93 @@
+//系统数据库
+namespace andot.System
+import andot;
+import hprose;
+
+var servUrl="/wuliu/http_server.php";
+ahtmlServer = function(funcName,...){
+	return ..andot.ahtmlServer(servUrl, funcName, ...); 
+	
+}
+
+eeee=function( ...){
+	var ok,t = ahtmlServer("exe",...);
+	if(ok){
+		//var ok,t = ahtmlServer("exe",...)
+		var ttt = ..table.unpackArgs(t);
+		//if(type(ttt)==type.table){return 1,ttt,t;} 
+		//if(type(ttt)==type.number){return 2,ttt,t;}
+		//if(type(ttt)==type.string){return 3,ttt,t;}  
+		if(#ttt<1){return 1;}  
+		else  
+		return null,ttt;
+	}	
+}
+
+exec = function( ... ){
+	var ok,t = ahtmlServer("exe",...);
+	var ttt = ..table.unpackArgs(t);
+	if( ok && (#ttt<1)){return true;}  
+
+	return null,ttt;
+}
+
+getTable = function( ... ){
+	var ok,t = ahtmlServer("getTable", ... );
+	var ttt = ..table.unpackArgs(t);
+
+import string;	
+	var p = type(ttt);
+	if(p == type.table){
+    	for(k1,v1 in ttt){
+    		
+    		//io.print(k1);
+    		//io.print(tostring(v1));
+        	p = type(v1);
+        	if( p == type.table ){
+        		for(k2,v2 in v1){
+        			ttt[k1][k2]=string.fromto(v2);
+        			//io.print(string.fromto(v2))
+        		}
+        	
+        	}else{
+        		ttt[k1]=string.fromto(v1);
+        		//io.print(table.tostring(v1))
+        	}
+    	}	
+	}
+
+	
+	if( ok && (type(ttt)==type.table)){return ttt;}
+	if( ok && (type(ttt)==type.string)&&(#ttt==0)){return ttt;}
+	
+	return null,ttt;
+}
+
+transaction = function( ... ){//事务执行,参数table
+	var ok,t = ahtmlServer("transaction", ... );
+	if( ok )
+		return ..table.unpackArgs(t);
+	return null,t;
+}
+
+sp_getPrimaryKey = function(tablename){//返回表新增主键
+	var sql =andot.getStoredProcedures("sp_getPrimaryKey",tablename);
+	var ok,t = ahtmlServer("storedProcedures",sql);
+	if( ok ){
+		var t,err = ..table.unpackArgs(t);
+		if(t) return t[1]["PrimaryKey"]; 
+		return null,err;
+	}
+	return null,t;
+}
+
+getServerTime = function(){
+	var ok,t = ahtmlServer("getServerTime");
+	if( ok )
+		return ..table.unpackArgs(t);
+		
+	var t = ..time();
+	t.format="%Y-%m-%d %H:%M:%S";
+	return tostring(t); 
+
+}

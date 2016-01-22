@@ -1,0 +1,49 @@
+//数据库访问层
+namespace ws
+
+import ws.System;
+import thread.manage;
+
+//RSA公钥，留空不加密
+var rsaPublicKey = /*
+BgIAAACkAABSU0ExAAQAAAEAAQD1ER+wwwBXZeKIZcdil6mlAWk1ljlqpuBc75sS
+z+SoIY9tuyJX9+6jvnT5/M3YhgTC3mFzEwdko/pIfLrVSlmto4A8hPNsmbwBAr3H
++0qcitPc6R53NmVnsPb+XzkMGDB4E2j8+W6n1xNSwWBXmqsU1RtG/6NeTU/adPIQ
+IS4jnA==*/
+
+/*intellisense(ws)*/
+
+getServerTime = function(){//返回服务器时间	
+	return ws.System.getServerTime(); 
+}
+
+ahtmlServer = function(serverUrl,funcName, ...){
+
+	var func = function(serverUrl, rsaPublicKey, funcName, ...){
+		import carl.ahtml.client;
+		
+		var ahtml = carl.ahtml.client(serverUrl, rsaPublicKey);
+		ahtml.code = "aauto";
+		var t = { ahtml[funcName](...) };
+		ahtml.close();
+		return true,t;
+	}
+	
+	var path = "/config/loginForm.table";
+	var ahtmlServerUrl = ..thread.get("ahtmlServerUrl");
+	if(!#ahtmlServerUrl && ..io.exist(path)){
+		var t = eval(..string.load(path))
+		ahtmlServerUrl = t[["ahtmlServerUrl"]];
+	}
+	if(!#ahtmlServerUrl) return null,"未配置ahtmlServerUrl";
+
+	var bool,t;
+	manage = thread.manage(1);
+	manage.create(func, ahtmlServerUrl ++ serverUrl, rsaPublicKey, funcName, ...).onEnd = function(...){
+		bool,t = ...;
+	}
+	manage.waitClose()
+	return bool,t; 
+}
+
+/*end intellisense*/

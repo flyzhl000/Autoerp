@@ -1,0 +1,7 @@
+
+namespace web.layout.behavior.main.systemMenuClick
+
+//显示隐藏我的桌面
+onMouseUp = function( ltTarget,ltOwner,x,y,ltMouseParams ) {
+	..mainForm.tab.hide = !..mainForm.tab.hide;
+}
